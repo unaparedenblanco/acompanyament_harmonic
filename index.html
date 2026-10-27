@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ca" class="h-full overflow-hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Acompanyament Harmònic - Miquel Castellá</title>
+    <!-- Tailwind CSS per als estils -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter per a una millor tipografia -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            touch-action: manipulation;
+        }
+        /* Animacions i efectes personalitzats */
+        .card-active {
+            transform: scale(0.96) !important;
+            box-shadow: 0 0 35px rgba(129, 140, 248, 0.85) !important;
+            border-color: #818cf8 !important;
+            background-color: rgba(49, 46, 129, 0.65) !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 h-screen flex flex-col justify-between overflow-hidden selection:bg-indigo-500 selection:text-white">
+
+    <!-- Capçalera Principal -->
+    <header class="w-full py-2.5 px-4 border-b border-slate-800 bg-slate-950/70 backdrop-blur-md shrink-0 shadow-md">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-gradient-to-tr from-indigo-600 to-purple-600 rounded-xl text-white shadow-lg shadow-indigo-500/30">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-sm md:text-lg font-black tracking-wider bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 bg-clip-text text-transparent uppercase">
+                        Acompanyament Harmònic
+                    </h1>
+                    <p class="text-[10px] font-semibold text-indigo-400 -mt-0.5 tracking-wide">Miquel Castellá</p>
+                </div>
+            </div>
+            <span class="text-[11px] font-medium bg-slate-800/80 text-slate-300 px-3 py-1 rounded-full border border-slate-700">
+                Aprendre Harmonia
+            </span>
+        </div>
+    </header>
+
+    <!-- Contingut Principal -->
+    <main class="flex-grow flex items-center justify-center p-2 md:p-4 overflow-hidden">
+        
+        <!-- ================= PANTALLA 1: Selecció de Tonalitat ================= -->
+        <section id="screen-selection" class="w-full max-w-lg bg-slate-800/80 rounded-3xl p-4 md:p-6 border border-slate-700/60 shadow-2xl backdrop-blur-xl transition-all duration-300">
+            
+            <!-- Títol Principal i Subtítol -->
+            <div class="text-center mb-3">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-indigo-400 bg-indigo-950/60 border border-indigo-800/60 px-2.5 py-0.5 rounded-full mb-1 inline-block">Aplicació d'harmonia</span>
+                <h2 class="text-xl md:text-3xl font-black text-white tracking-tight mb-0.5">ACOMPANYAMENT HARMÒNIC</h2>
+                <p class="text-indigo-300 text-xs font-semibold tracking-wider uppercase mb-1.5">Miquel Castellá</p>
+                <p class="text-slate-400 text-xs md:text-sm max-w-md mx-auto">Selecciona la nota fonamental i la modalitat per començar a explorar els acords de la teva cançó.</p>
+            </div>
+
+            <form id="key-form" class="space-y-3" onsubmit="event.preventDefault(); startExplorer();">
+                <!-- Selecció de Nota (Sistemes Anglosaxó i Solfeig) -->
+                <div>
+                    <label class="block text-[10px] font-semibold uppercase tracking-wider text-slate-300 mb-1">Nota Fonamental</label>
+                    <div class="grid grid-cols-4 sm:grid-cols-6 gap-1.5">
+                        <div id="notes-container" class="contents"></div>
+                    </div>
+                </div>
+
+                <!-- Selecció de Modalitat (Major / Menor) -->
+                <div>
+                    <label class="block text-[10px] font-semibold uppercase tracking-wider text-slate-300 mb-1">Modalitat</label>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <button type="button" onclick="selectMode('major')" id="btn-mode-major" class="mode-btn py-2 px-3 rounded-xl font-semibold border border-indigo-500 bg-indigo-600/30 text-indigo-200 transition-all text-center flex justify-center items-center gap-2 text-xs md:text-sm">
+                            <span>Major</span>
+                        </button>
+                        <button type="button" onclick="selectMode('minor')" id="btn-mode-minor" class="mode-btn py-2 px-3 rounded-xl font-semibold border border-slate-700 bg-slate-900/50 text-slate-400 transition-all text-center flex justify-center items-center gap-2 text-xs md:text-sm">
+                            <span>Menor (Natural)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Botó d'Acció -->
+                <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold rounded-2xl shadow-lg shadow-indigo-500/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex justify-center items-center text-sm md:text-base gap-2 mt-1">
+                    <span>Explorar Tonalitat</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </button>
+            </form>
+        </section>
+
+        <!-- ================= PANTALLA 2: Graus i Acords ================= -->
+        <section id="screen-chords" class="w-full max-w-5xl h-full hidden transition-all duration-300 flex-col justify-between items-center py-1">
+            
+            <!-- Barra Superior d'Informació i Control -->
+            <div class="w-full flex justify-between items-center gap-3 bg-slate-800/60 p-2.5 md:p-3 rounded-2xl border border-slate-700/50 backdrop-blur-md shrink-0">
+                <button onclick="goBack()" class="flex items-center gap-1.5 px-3 py-1.5 bg-slate-700/60 hover:bg-slate-700 text-slate-200 font-medium rounded-xl transition border border-slate-600 text-xs">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    <span>Canviar</span>
+                </button>
+
+                <div class="text-center">
+                    <span class="text-[9px] uppercase tracking-widest text-slate-400 font-semibold block">Tonalitat Seleccionada</span>
+                    <h2 id="key-title" class="text-base md:text-2xl font-black bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 bg-clip-text text-transparent">
+                        Do Major
+                    </h2>
+                </div>
+
+                <div class="text-[10px] text-slate-400 text-right hidden md:block">
+                    Mantén premut el grau <br>per sostenir el so de l'acord
+                </div>
+            </div>
+
+            <!-- Fila Horitzontal / Graella de Targetes de Graus -->
+            <div class="w-full flex-grow flex items-center justify-center py-1 overflow-hidden">
+                <!-- Graella adaptativa: 3 columnes en mòbil (3+3+1), 7 columnes en escriptori -->
+                <div id="chords-grid" class="grid grid-cols-3 md:grid-cols-7 gap-2 md:gap-3 w-full max-h-[440px]">
+                    <!-- Es generen 7 targetes mitjançant JavaScript -->
+                </div>
+            </div>
+
+            <!-- Indicador d'ajuda visual -->
+            <p class="text-slate-400 text-[11px] md:text-xs text-center shrink-0 flex items-center justify-center gap-1.5 pb-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Mantén premut el ratolí, el dit o les tecles de l'1 al 7 per sostenir el so.</span>
+            </p>
+        </section>
+
+    </main>
+
+    <!-- Peu de Pàgina -->
+    <footer class="w-full py-1.5 text-center text-[10px] text-slate-500 border-t border-slate-800/80 bg-slate-950/40 shrink-0">
+        Acompanyament Harmònic &bull; Miquel Castellá &bull; Desenvolupat amb Web Audio API
+    </footer>
+
+    <!-- Lògica de l'Aplicació -->
+    <script>
+        // --- DADES MUSICALS ---
+        
+        const CHROMATIC_NOTES = [
+            { id: 0,  name: 'C',  solfège: 'Do',  fullName: 'C (Do)' },
+            { id: 1,  name: 'C#', solfège: 'Do#', fullName: 'C# (Do#)' },
+            { id: 2,  name: 'D',  solfège: 'Re',  fullName: 'D (Re)' },
+            { id: 3,  name: 'D#', solfège: 'Re#', fullName: 'D# (Re#)' },
+            { id: 4,  name: 'E',  solfège: 'Mi',  fullName: 'E (Mi)' },
+            { id: 5,  name: 'F',  solfège: 'Fa',  fullName: 'F (Fa)' },
+            { id: 6,  name: 'F#', solfège: 'Fa#', fullName: 'F# (Fa#)' },
+            { id: 7,  name: 'G',  solfège: 'Sol', fullName: 'G (Sol)' },
+            { id: 8,  name: 'G#', solfège: 'Sol#',fullName: 'G# (Sol#)' },
+            { id: 9,  name: 'A',  solfège: 'La',  fullName: 'A (La)' },
+            { id: 10, name: 'A#', solfège: 'La#', fullName: 'A# (La#)' },
+            { id: 11, name: 'B',  solfège: 'Si',  fullName: 'B (Si)' }
+        ];
+
+        const C4_FREQ = 261.63;
+
+        const MAJOR_SCALE = [
+            { degree: 'I',   semitones: 0,  type: 'Major',      suffix: '',     qualityClass: 'border-indigo-500/50 bg-indigo-950/30' },
+            { degree: 'II',  semitones: 2,  type: 'Menor',      suffix: 'm',    qualityClass: 'border-slate-700 bg-slate-800/40' },
+            { degree: 'III', semitones: 4,  type: 'Menor',      suffix: 'm',    qualityClass: 'border-slate-700 bg-slate-800/40' },
+            { degree: 'IV',  semitones: 5,  type: 'Major',      suffix: '',     qualityClass: 'border-indigo-500/50 bg-indigo-950/30' },
+            { degree: 'V',   semitones: 7,  type: 'Major',      suffix: '',     qualityClass: 'border-indigo-500/50 bg-indigo-950/30' },
+            { degree: 'VI',  semitones: 9,  type: 'Menor',      suffix: 'm',    qualityClass: 'border-slate-700 bg-slate-800/40' },
+            { degree: 'VII', semitones: 11, type: 'Disminuït',  suffix: 'dim',  qualityClass: 'border-rose-500/40 bg-rose-950/20' }
+        ];
+
+        const MINOR_SCALE = [
+            { degree: 'I',   semitones: 0,  type: 'Menor',      suffix: 'm',    qualityClass: 'border-slate-700 bg-slate-800/40' },
+            { degree: 'II',  semitones: 2,  type: 'Disminuït',  suffix: 'dim',  qualityClass: 'border-rose-500/40 bg-rose-950/20' },
+            { degree: 'III', semitones: 3,  type: 'Major',      suffix: '',     qualityClass: 'border-indigo-500/50 bg-indigo-950/30' },
+            { degree: 'IV',  semitones: 5,  type: 'Menor',      suffix: 'm',    qualityClass: 'border-slate-700 bg-slate-800/40' },
+            { degree: 'V',   semitones: 7,  type: 'Menor',      suffix: 'm',    qualityClass: 'border-slate-700 bg-slate-800/40' },
+            { degree: 'VI',  semitones: 8,  type: 'Major',      suffix: '',     qualityClass: 'border-indigo-500/50 bg-indigo-950/30' },
+            { degree: 'VII', semitones: 10, type: 'Major',      suffix: '',     qualityClass: 'border-indigo-500/50 bg-indigo-950/30' }
+        ];
+
+        // --- ESTAT DE L'APLICACIÓ ---
+        let selectedNoteIndex = 0;
+        let selectedMode = 'major';
+        let audioCtx = null;
+
+        // Estructura de seguiment d'acords sonant actualment
+        const activeChords = {};
+        const activeKeyStates = {};
+
+        // --- INICIALITZACIÓ ---
+        window.addEventListener('DOMContentLoaded', () => {
+            renderNoteSelector();
+            setupKeyboardEvents();
+        });
+
+        function renderNoteSelector() {
+            const container = document.getElementById('notes-container');
+            container.innerHTML = '';
+
+            CHROMATIC_NOTES.forEach((note, index) => {
+                const isSelected = index === selectedNoteIndex;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `note-btn py-1.5 px-2 rounded-xl border font-semibold text-center transition-all ${
+                    isSelected 
+                        ? 'bg-indigo-600 border-indigo-400 text-white shadow-lg shadow-indigo-600/30' 
+                        : 'bg-slate-900/60 border-slate-700 text-slate-300 hover:bg-slate-700/50'
+                }`;
+                btn.onclick = () => selectNote(index);
+                btn.innerHTML = `
+                    <div class="text-xs font-bold">${note.name}</div>
+                    <div class="text-[9px] opacity-75 font-normal">${note.solfège}</div>
+                `;
+                container.appendChild(btn);
+            });
+        }
+
+        function selectNote(index) {
+            selectedNoteIndex = index;
+            renderNoteSelector();
+        }
+
+        function selectMode(mode) {
+            selectedMode = mode;
+            const btnMajor = document.getElementById('btn-mode-major');
+            const btnMinor = document.getElementById('btn-mode-minor');
+
+            if (mode === 'major') {
+                btnMajor.className = 'mode-btn py-2 px-3 rounded-xl font-semibold border border-indigo-500 bg-indigo-600/30 text-indigo-200 transition-all text-center flex justify-center items-center gap-2 text-xs md:text-sm';
+                btnMinor.className = 'mode-btn py-2 px-3 rounded-xl font-semibold border border-slate-700 bg-slate-900/50 text-slate-400 transition-all text-center flex justify-center items-center gap-2 text-xs md:text-sm';
+            } else {
+                btnMinor.className = 'mode-btn py-2 px-3 rounded-xl font-semibold border border-indigo-500 bg-indigo-600/30 text-indigo-200 transition-all text-center flex justify-center items-center gap-2 text-xs md:text-sm';
+                btnMajor.className = 'mode-btn py-2 px-3 rounded-xl font-semibold border border-slate-700 bg-slate-900/50 text-slate-400 transition-all text-center flex justify-center items-center gap-2 text-xs md:text-sm';
+            }
+        }
+
+        function startExplorer() {
+            initAudioContext();
+
+            const noteObj = CHROMATIC_NOTES[selectedNoteIndex];
+            const modeText = selectedMode === 'major' ? 'Major' : 'Menor Natural';
+            
+            document.getElementById('key-title').innerText = `${noteObj.fullName} ${modeText}`;
+
+            renderChordCards();
+
+            document.getElementById('screen-selection').classList.add('hidden');
+            const screenChords = document.getElementById('screen-chords');
+            screenChords.classList.remove('hidden');
+            screenChords.classList.add('flex');
+        }
+
+        function goBack() {
+            stopAllChords();
+            document.getElementById('screen-chords').classList.add('hidden');
+            document.getElementById('screen-chords').classList.remove('flex');
+            document.getElementById('screen-selection').classList.remove('hidden');
+        }
+
+        function renderChordCards() {
+            const container = document.getElementById('chords-grid');
+            container.innerHTML = '';
+
+            const scalePattern = selectedMode === 'major' ? MAJOR_SCALE : MINOR_SCALE;
+
+            scalePattern.forEach((degreeInfo, index) => {
+                const rootNoteIndex = (selectedNoteIndex + degreeInfo.semitones) % 12;
+                const rootNote = CHROMATIC_NOTES[rootNoteIndex];
+                
+                const chordName = `${rootNote.name}${degreeInfo.suffix}`;
+                const chordNameSolfege = `${rootNote.solfège} ${degreeInfo.type.toLowerCase()}`;
+
+                const card = document.createElement('div');
+                card.id = `chord-card-${index}`;
+                // Si és el 7é element (índex 6), a mòbil fem que ocupe tota la fila (col-span-3) o s'alinee perfectament
+                const mobileSpanClass = (index === 6) ? 'col-span-3 md:col-span-1' : '';
+                card.className = `cursor-pointer p-2.5 md:p-3.5 rounded-2xl border transition-all duration-75 text-center flex flex-col justify-between h-full select-none ${degreeInfo.qualityClass} hover:border-indigo-400 hover:shadow-xl ${mobileSpanClass}`;
+
+                card.innerHTML = `
+                    <div class="flex flex-col h-full justify-between items-center">
+                        <div class="w-full">
+                            <span class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-0.5">Grau ${degreeInfo.degree}</span>
+                            <div class="text-lg md:text-2xl font-black text-white mb-0.5">${chordName}</div>
+                            <div class="text-[10px] md:text-xs text-indigo-300/80 font-medium">${chordNameSolfege}</div>
+                        </div>
+
+                        <div class="mt-1.5 md:mt-2">
+                            <span class="inline-block text-[9px] md:text-[10px] font-semibold px-2 py-0.5 rounded-lg bg-slate-900/60 text-slate-300 border border-slate-700/60">
+                                ${degreeInfo.type}
+                            </span>
+                        </div>
+                    </div>
+                `;
+
+                // Esdeveniments de ratolí i tàctils per sostenir el so
+                const startChord = (e) => {
+                    e.preventDefault();
+                    startDegreeChord(index);
+                };
+
+                const stopChord = (e) => {
+                    e.preventDefault();
+                    stopDegreeChord(index);
+                };
+
+                card.addEventListener('mousedown', startChord);
+                card.addEventListener('mouseup', stopChord);
+                card.addEventListener('mouseleave', stopChord);
+
+                card.addEventListener('touchstart', startChord, { passive: false });
+                card.addEventListener('touchend', stopChord, { passive: false });
+                card.addEventListener('touchcancel', stopChord, { passive: false });
+
+                container.appendChild(card);
+            });
+        }
+
+        // Esdeveniments de teclat (1 a 7)
+        function setupKeyboardEvents() {
+            window.addEventListener('keydown', (e) => {
+                const screenChords = document.getElementById('screen-chords');
+                if (screenChords.classList.contains('hidden')) return;
+
+                const keyNum = parseInt(e.key);
+                if (keyNum >= 1 && keyNum <= 7) {
+                    const degreeIndex = keyNum - 1;
+                    if (!activeKeyStates[degreeIndex]) {
+                        activeKeyStates[degreeIndex] = true;
+                        startDegreeChord(degreeIndex);
+                    }
+                }
+            });
+
+            window.addEventListener('keyup', (e) => {
+                const keyNum = parseInt(e.key);
+                if (keyNum >= 1 && keyNum <= 7) {
+                    const degreeIndex = keyNum - 1;
+                    activeKeyStates[degreeIndex] = false;
+                    stopDegreeChord(degreeIndex);
+                }
+            });
+        }
+
+        // --- SISTEMA D'ÀUDIO AVANÇAT (VOLUM AUGMENTAT) ---
+
+        function initAudioContext() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function getFrequency(semitonesFromC4) {
+            return C4_FREQ * Math.pow(2, semitonesFromC4 / 12);
+        }
+
+        // Inicia el so de l'acord amb volum incrementat
+        function startDegreeChord(degreeIndex) {
+            initAudioContext();
+
+            // Si ja està sonant, evitem reiniciar
+            if (activeChords[degreeIndex]) return;
+
+            const scalePattern = selectedMode === 'major' ? MAJOR_SCALE : MINOR_SCALE;
+            const degreeInfo = scalePattern[degreeIndex];
+            const rootSemitones = selectedNoteIndex + degreeInfo.semitones;
+
+            // Intervals: Triada + Octava
+            let chordIntervals = [0, 4, 7];
+            if (degreeInfo.type === 'Menor') chordIntervals = [0, 3, 7];
+            else if (degreeInfo.type === 'Disminuït') chordIntervals = [0, 3, 6];
+            chordIntervals.push(12);
+
+            const now = audioCtx.currentTime;
+
+            // Master Gain augmentat (passant de 0.35 a 0.55 per a més presència i força)
+            const chordMasterGain = audioCtx.createGain();
+            chordMasterGain.gain.setValueAtTime(0, now);
+            chordMasterGain.gain.linearRampToValueAtTime(0.55, now + 0.05);
+
+            // Filtre passa-baix principal amb més obertura per guanyar brillantsa i volum percebut
+            const masterFilter = audioCtx.createBiquadFilter();
+            masterFilter.type = 'lowpass';
+            masterFilter.frequency.setValueAtTime(1000, now);
+            masterFilter.frequency.exponentialRampToValueAtTime(2800, now + 0.08);
+            masterFilter.frequency.exponentialRampToValueAtTime(1200, now + 0.4);
+            masterFilter.Q.value = 1.0;
+
+            // LFO per afegir vibrat suau
+            const lfo = audioCtx.createOscillator();
+            const lfoGain = audioCtx.createGain();
+            lfo.frequency.value = 4.5;
+            lfoGain.gain.value = 3;
+            lfo.connect(lfoGain);
+            lfo.start(now);
+
+            const nodesToStop = [lfo];
+
+            // Crear oscil·ladors per a cada nota de l'acord
+            chordIntervals.forEach((interval, i) => {
+                const noteSemitones = rootSemitones + interval;
+                const freq = getFrequency(noteSemitones);
+
+                // Oscil·lador 1: Sine
+                const osc1 = audioCtx.createOscillator();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(freq, now);
+                lfoGain.connect(osc1.frequency);
+
+                // Oscil·lador 2: Triangle amb detune
+                const osc2 = audioCtx.createOscillator();
+                osc2.type = 'triangle';
+                osc2.frequency.setValueAtTime(freq, now);
+                osc2.detune.setValueAtTime((i % 2 === 0 ? 3.5 : -3.5), now);
+
+                // Sub-gain per nota (augmentat per donar més volum global)
+                const noteGain = audioCtx.createGain();
+                const baseVol = (i === 0 ? 0.45 : 0.30);
+                noteGain.gain.value = baseVol / chordIntervals.length;
+
+                osc1.connect(noteGain);
+                osc2.connect(noteGain);
+                noteGain.connect(masterFilter);
+
+                osc1.start(now);
+                osc2.start(now);
+
+                nodesToStop.push(osc1, osc2);
+            });
+
+            masterFilter.connect(chordMasterGain);
+            chordMasterGain.connect(audioCtx.destination);
+
+            // Guardem referència
+            activeChords[degreeIndex] = {
+                masterGain: chordMasterGain,
+                nodes: nodesToStop
+            };
+
+            // Animació visual
+            const card = document.getElementById(`chord-card-${degreeIndex}`);
+            if (card) card.classList.add('card-active');
+        }
+
+        // Transició de sortida suau (Release)
+        function stopDegreeChord(degreeIndex) {
+            const chordData = activeChords[degreeIndex];
+            if (!chordData) return;
+
+            const now = audioCtx.currentTime;
+            const releaseTime = 0.4;
+
+            chordData.masterGain.gain.cancelScheduledValues(now);
+            chordData.masterGain.gain.setValueAtTime(chordData.masterGain.gain.value, now);
+            chordData.masterGain.gain.exponentialRampToValueAtTime(0.0001, now + releaseTime);
+
+            setTimeout(() => {
+                chordData.nodes.forEach(node => {
+                    try {
+                        if (node.stop) node.stop();
+                        node.disconnect();
+                    } catch (e) {}
+                });
+                chordData.masterGain.disconnect();
+            }, releaseTime * 1000 + 50);
+
+            delete activeChords[degreeIndex];
+
+            const card = document.getElementById(`chord-card-${degreeIndex}`);
+            if (card) card.classList.remove('card-active');
+        }
+
+        function stopAllChords() {
+            Object.keys(activeChords).forEach(degreeIndex => {
+                stopDegreeChord(degreeIndex);
+            });
+        }
+    </script>
+</body>
+</html>
